@@ -1,15 +1,12 @@
 /*
  * Mark Gapasin
  * Implements a relational database. 
- *
  */
-
 
 import java.io.IOException;
 import java.util.*;
 import java.io.File;
 import java.io.PrintWriter;
-
 
 public class DbTable {
 
@@ -28,11 +25,9 @@ public class DbTable {
     /**
      * Initializes a table
      *
-     * @param columnNames ArrayList of all the column names in the table.
-     *                    Valid column names are alphanumeric strings
-     *                    (i.e. letters, numbers, and spaces are ok, but no symbols)
-     * @throws IllegalArgumentException if columnNames is empty
-     *                                          or null, or if any String in columnNames is not alphanumeric
+     * @param columnNames ArrayList of all the column names in the table. 
+     * Valid column names are alphanumeric strings (i.e. letters, numbers, and spaces are ok, but no symbols)
+     * @throws IllegalArgumentException if columnNames is empty or null, or if any String in columnNames is not alphanumeric
      */
     public DbTable(ArrayList<String> columnNames) throws IllegalArgumentException {
         this.columnNames = new ArrayList<String>(columnNames);
@@ -44,9 +39,8 @@ public class DbTable {
      * Inserts new DataObject into table
      *
      * @param newRow DataObject to be inserted
-     * @throws IllegalArgumentException if newRow is missing any
-     *                                          column in columnNames, or any column value is not an
-     *                                          alphanumeric String
+     * @throws IllegalArgumentException if newRow is missing any column in columnNames,
+     * or any column value is not an alphanumeric String
      */
     public void insert(DataObject newRow) throws IllegalArgumentException {
             if(this.indexTrees.isEmpty()){
@@ -90,9 +84,8 @@ public class DbTable {
      * @param values  String array of the value corresponding to each column
      * @param ctype   Type of comparison to be performed (e.g. equality, less than, etc)
      * @return All the DataObjects in the table that satisfy the conditions
-     * @throws IllegalArgumentException if the lengths of columns, values and
-     *                                  ctype arrays do not match, or if any of the strings in the columns
-     *                                  array do not match strings in this.columnNames
+     * @throws IllegalArgumentException if the lengths of columns, values and ctype arrays do not match,
+     * or if any of the strings in the columns array do not match strings in this.columnNames
      */
     public ArrayList<DataObject> select(String[] columns,
                                         String[] values,
@@ -188,16 +181,12 @@ public class DbTable {
         ArrayList<DataObject> toCheck;
         if (indexedObjects.size() > 0) {
             // If there were indexed columns then get all data objects that satisfied ALL of the conditions
-            //System.out.println("indexed Objects before intersect : " + indexedObjects);
             selectedObjects = intersect(indexedObjects);
-            //System.out.println("indexed Objects after intersect : " + selectedObjects);
         } else {
             // If there were not ANY indexed columns, then just scan the whole linked list
             toCheck = new ArrayList<DataObject>(this.entries);
-
             // Now run your old select code on the toCheck ArrayList:
             for (DataObject obj : toCheck) {
-
                 for (Integer ind : nonIndexedIndices) {
                     String column = columns[ind];
                     String value = values[ind];
@@ -221,7 +210,6 @@ public class DbTable {
                 }
             }
         }
-        //System.out.println("selected array to return: " + selectedObjects);
         return selectedObjects;
     }
 
@@ -238,11 +226,8 @@ public class DbTable {
             this.entries.remove(toDelete);
             for(Map.Entry< String, TreeMap<String, ArrayList<DataObject>> > arr : this.indexTrees.entrySet()){
                 String colName = arr.getKey();
-                // System.out.println("indexTree key during deletion: " + colName);
                 TreeMap<String, ArrayList<DataObject>> indexTree = arr.getValue();
-                // System.out.println("indexTree value before deletion: " + indexTree);
                 String key = toDelete.get(colName);
-                // System.out.println("indexTree key during deletion2: " + key);
                 if(this.indexTrees.containsKey(colName)){
                     this.indexTrees.get(colName).get(key).remove(toDelete);
                     //if after deletion indexTree is empty, delete indexTree
@@ -250,7 +235,6 @@ public class DbTable {
                         this.indexTrees.get(colName).remove(key);
                     }
                 }
-                // System.out.println("indexTree value after deletion: " + indexTree);
             }
 
         }
@@ -282,8 +266,8 @@ public class DbTable {
      * 021,math150,1500
      * 421,math151,1000
      *
-     * @param outputFileName Name of the file to write the contents to.
-     *                       If the file already exists then it will be overwritten.
+     * @param outputFileName Name of the file to write the contents to. 
+     * If the file already exists then it will be overwritten.
      * @throws java.io.IOException if the file cannot be written to
      */
     public void writeToFile(String outputFileName) throws java.io.IOException {
@@ -305,15 +289,13 @@ public class DbTable {
     }
 
     /**
-     * Reads a saved table file (usually one written by the writeToFile method)
-     * and re-constructs the DbTable instance.
+     * Reads a saved table file (usually one written by the writeToFile method) and re-constructs the DbTable instance.
      * See writeToFile for description of file format.
      *
      * @param inputFileName Name of the file to read
      * @return DbTable instance
-     * @throws java.io.FileNotFoundException    if the specified file doesn't exist.
-     * @throws IllegalArgumentException if the specified file
-     *                                          exists but is malformed.
+     * @throws java.io.FileNotFoundException if the specified file doesn't exist.
+     * @throws IllegalArgumentException if the specified file exists but is malformed.
      */
     public static DbTable constructFromFile(String inputFileName)
             throws IllegalArgumentException, java.io.FileNotFoundException {
@@ -384,11 +366,10 @@ public class DbTable {
      * Takes set of ArrayLists of DataObjects, and returns all DataObjects that belong to all of the sets
      *
      * ex1: If arraySet = {{1,2,3}, {2,3}}, intersect returns {2,3}
-     *
      * ex2: If arraySet = {{1,2}, {2,3}, {2, 4}}, intersect returns {2}
      *
-     * @param arraySet      Sets to intersect
-     * @return              All data objects that belong to each set
+     * @param arraySet Sets to intersect
+     * @return All data objects that belong to each set
      */
     public static ArrayList<DataObject> intersect(ArrayList<ArrayList<DataObject>> arraySet) {
         HashMap<DataObject, Integer> frequency = new HashMap<DataObject, Integer>();
